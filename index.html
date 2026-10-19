@@ -1,1 +1,681 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <!--
+    JAK EDYTOWAĆ STRONĘ
+    1. Kolory: zmień --paper, --ink i --accent w :root oraz w trybie ciemnym.
+    2. Fonty: zmień adres Google Fonts i zmienne --font-display / --font-meta.
+    3. Projekty: skopiuj cały element <li class="project">, zmień numer,
+       tytuł, opis, rok i technologie. Dodaj link według komentarza w projekcie.
+    4. Teksty dwujęzyczne: edytuj atrybuty data-pl i data-en.
+       Tekst wewnątrz elementu to wersja widoczna bez JavaScriptu.
+    5. Kontakt: zastąp przykładowe pola swoimi linkami.
 
+    TYPOGRAFIA
+    Bricolage Grotesque ma wyraziste, lekko nieregularne proporcje:
+    nadaje dużym nagłówkom charakter bez dodatkowych dekoracji.
+    DM Mono porządkuje metadane jak podpisy na technicznym rysunku.
+    Akcent: ceglana czerwień. Paleta ma trzy kolory w każdym trybie.
+  -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta
+    name="description"
+    content="Juliusz — elektronika i telekomunikacja na AGH w Krakowie. Projekty i C++."
+  >
+  <title>Juliusz — portfolio</title>
+
+  <!-- Jedyny zasób zewnętrzny: fonty. Bez nich działają fonty zastępcze. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    /* ---------- Podstawowe ustawienia ---------- */
+    :root {
+      --paper: #f3f0e8;
+      --ink: #24231f;
+      --accent: #a63b28;
+
+      --font-display: "Bricolage Grotesque", "Helvetica Neue", sans-serif;
+      --font-meta: "DM Mono", Consolas, monospace;
+
+      --text-small: 0.75rem;
+      --text-body: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+      --text-project: clamp(1.6rem, 1.1rem + 2vw, 3rem);
+      --text-heading: clamp(2.75rem, 1.8rem + 5vw, 6.75rem);
+      --text-name: clamp(5rem, 19vw, 17rem);
+
+      --space-1: 0.5rem;
+      --space-2: 1rem;
+      --space-3: 1.5rem;
+      --space-4: 2rem;
+      --space-5: clamp(3rem, 7vw, 7rem);
+
+      --gutter: clamp(1.25rem, 5vw, 5rem);
+      --column-gap: clamp(1rem, 2vw, 2rem);
+      --hairline: 1px solid currentColor;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --paper: #1b1c19;
+        --ink: #e9e6dd;
+        --accent: #ef9278;
+      }
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 2rem;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-display);
+      font-size: var(--text-body);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: var(--paper);
+    }
+
+    a {
+      color: inherit;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.25em;
+    }
+
+    a:hover {
+      color: var(--accent);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 6px;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-weight: 500;
+    }
+
+    /* min-width: 0 pozwala długim treściom mieścić się w kolumnach. */
+    .grid > * {
+      min-width: 0;
+    }
+
+    .page {
+      max-width: 1600px;
+      margin-inline: auto;
+      padding-inline: var(--gutter);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: var(--column-gap);
+    }
+
+    .meta {
+      font-family: var(--font-meta);
+      font-size: var(--text-small);
+      font-weight: 400;
+      line-height: 1.6;
+      letter-spacing: 0.025em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .accent {
+      color: var(--accent);
+    }
+
+    .skip-link {
+      position: absolute;
+      top: 1rem;
+      left: var(--gutter);
+      z-index: 10;
+      padding: var(--space-1) var(--space-2);
+      background: var(--paper);
+      border: var(--hairline);
+      transform: translateY(-200%);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    /* ---------- Nagłówek ---------- */
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding-block: var(--space-3);
+      border-bottom: var(--hairline);
+    }
+
+    .wordmark {
+      font-size: 1.125rem;
+      font-weight: 600;
+      text-decoration: none;
+      letter-spacing: -0.04em;
+    }
+
+    .header-right,
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .nav a {
+      text-decoration: none;
+    }
+
+    .nav a:hover {
+      text-decoration: underline;
+    }
+
+    .language {
+      border: 0;
+      border-left: var(--hairline);
+      padding: 0 0 0 var(--space-3);
+      background: transparent;
+      cursor: pointer;
+    }
+
+    /* Przycisk pojawia się tylko, gdy przełączanie języka działa. */
+    [hidden] {
+      display: none !important;
+    }
+
+    /* ---------- Otwarcie ---------- */
+    .hero {
+      padding-top: var(--space-4);
+      padding-bottom: var(--space-5);
+      row-gap: var(--space-4);
+    }
+
+    .hero-meta,
+    .hero-name,
+    .hero-statement {
+      grid-column: 1 / -1;
+    }
+
+    .hero-name {
+      font-size: var(--text-name);
+      line-height: 0.94;
+      letter-spacing: -0.075em;
+      margin-left: -0.045em;
+    }
+
+    .hero-statement {
+      max-width: 16ch;
+      font-size: var(--text-heading);
+      line-height: 1.04;
+      letter-spacing: -0.055em;
+      text-wrap: balance;
+    }
+
+    /* ---------- Sekcje ---------- */
+    .section {
+      border-top: var(--hairline);
+      padding-top: var(--space-3);
+      padding-bottom: var(--space-5);
+      row-gap: var(--space-4);
+    }
+
+    .section-label,
+    .section-content {
+      grid-column: 1 / -1;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-2);
+      font-size: var(--text-small);
+      font-family: var(--font-meta);
+      font-weight: 400;
+    }
+
+    /* ---------- Lista projektów ---------- */
+    .project-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .project {
+      border-bottom: var(--hairline);
+      padding-block: var(--space-3) var(--space-4);
+      transition: color 180ms ease;
+    }
+
+    .project:first-child {
+      padding-top: 0;
+    }
+
+    .project:hover {
+      color: var(--accent);
+    }
+
+    .project-top {
+      display: grid;
+      grid-template-columns: 2rem minmax(0, 1fr);
+      gap: var(--space-2);
+      align-items: baseline;
+    }
+
+    .project h3 {
+      font-size: var(--text-project);
+      line-height: 1.15;
+      letter-spacing: -0.04em;
+      overflow-wrap: anywhere;
+    }
+
+    .project h3 a {
+      text-decoration: none;
+    }
+
+    .project h3 a:hover {
+      text-decoration: underline;
+    }
+
+    .project-year {
+      grid-column: 2;
+    }
+
+    .project-description,
+    .project-stack {
+      margin-left: 3rem;
+      max-width: 48ch;
+    }
+
+    .project-description {
+      margin-top: var(--space-2);
+    }
+
+    .project-stack {
+      margin-top: var(--space-3);
+    }
+
+    /* ---------- O mnie ---------- */
+    .about-copy {
+      max-width: 34ch;
+      font-size: clamp(1.5rem, 1.1rem + 1.3vw, 2.5rem);
+      line-height: 1.3;
+      letter-spacing: -0.025em;
+    }
+
+    .learning {
+      margin-top: var(--space-4);
+      max-width: 52ch;
+    }
+
+    /* ---------- Kontakt i stopka ---------- */
+    .contact-heading {
+      margin-bottom: var(--space-4);
+      font-size: clamp(2.5rem, 1.7rem + 3vw, 5rem);
+      line-height: 1.1;
+      letter-spacing: -0.05em;
+    }
+
+    .contact-list {
+      margin: 0;
+    }
+
+    .contact-row {
+      display: grid;
+      grid-template-columns: 6rem minmax(0, 1fr);
+      gap: var(--space-2);
+      padding-block: var(--space-2);
+      border-top: var(--hairline);
+    }
+
+    .contact-row dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: var(--space-2);
+      padding-block: var(--space-3);
+      border-top: var(--hairline);
+    }
+
+    /* ---------- Układ na większym ekranie ---------- */
+    @media (min-width: 760px) {
+      .header {
+        padding-block: var(--space-4);
+      }
+
+      .header-right {
+        gap: var(--space-4);
+      }
+
+      .hero {
+        padding-top: var(--space-4);
+        row-gap: var(--space-5);
+      }
+
+      .hero-meta {
+        grid-column: 9 / -1;
+      }
+
+      .hero-statement {
+        grid-column: 5 / -1;
+      }
+
+      .section-label {
+        grid-column: 1 / 4;
+      }
+
+      .section-content {
+        grid-column: 5 / -1;
+      }
+
+      .project-top {
+        grid-template-columns: 2rem minmax(0, 1fr) auto;
+      }
+
+      .project-year {
+        grid-column: auto;
+      }
+    }
+
+    /* Żadnych animacji dla osób, które ograniczają ruch. */
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a
+    class="skip-link meta"
+    href="#main"
+    data-pl="Przejdź do treści"
+    data-en="Skip to content"
+  >Przejdź do treści</a>
+
+  <div class="page">
+    <header class="header">
+      <a class="wordmark" href="#main">Juliusz</a>
+
+      <div class="header-right">
+        <nav class="nav meta" aria-label="Menu">
+          <a href="#projects" data-pl="Projekty" data-en="Projects">Projekty</a>
+          <a href="#about" data-pl="O mnie" data-en="About">O mnie</a>
+          <a href="#contact" data-pl="Kontakt" data-en="Contact">Kontakt</a>
+        </nav>
+
+        <button
+          class="language meta"
+          id="language-toggle"
+          type="button"
+          aria-label="Switch to English"
+          hidden
+        >EN</button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero grid" aria-labelledby="name">
+        <p class="hero-meta meta">
+          AGH / Kraków<br>
+          <span
+            data-pl="Elektronika i telekomunikacja"
+            data-en="Electronics and Telecommunications"
+          >Elektronika i telekomunikacja</span>
+        </p>
+
+        <h1 class="hero-name" id="name">Juliusz<span class="accent">.</span></h1>
+
+        <p
+          class="hero-statement"
+          data-pl="Studiuję elektronikę. Programuję w C++."
+          data-en="I study electronics. I write C++."
+        >Studiuję elektronikę. Programuję w C++.</p>
+      </section>
+
+      <section class="section grid" id="projects" aria-labelledby="projects-title">
+        <h2 class="section-label" id="projects-title">
+          <span class="accent">01</span>
+          <span data-pl="Wybrane projekty" data-en="Selected projects">Wybrane projekty</span>
+        </h2>
+
+        <div class="section-content">
+          <!--
+            To są jawne pola do uzupełnienia, nie wymyślone projekty.
+            Przed publikacją zastąp je swoimi pracami.
+
+            Przykład tytułu z linkiem:
+            <h3><a href="https://github.com/TWOJ_LOGIN/REPO">Nazwa projektu ↗</a></h3>
+
+            Przy zmianie tytułu usuń atrybuty data-pl/data-en albo zaktualizuj
+            obie wersje. Dodaj prawdziwy rok do <time datetime="2026">2026</time>.
+          -->
+          <ol class="project-list">
+            <li class="project">
+              <div class="project-top">
+                <span class="meta accent" aria-hidden="true">01</span>
+                <h3
+                  data-pl="[Nazwa projektu]"
+                  data-en="[Project title]"
+                >[Nazwa projektu]</h3>
+                <span class="project-year meta" data-pl="[Rok]" data-en="[Year]">[Rok]</span>
+              </div>
+
+              <p
+                class="project-description"
+                data-pl="[Jedno zdanie: co zrobiłem i do czego to służy.]"
+                data-en="[One sentence: what I built and what it does.]"
+              >[Jedno zdanie: co zrobiłem i do czego to służy.]</p>
+
+              <p
+                class="project-stack meta"
+                data-pl="[Technologie]"
+                data-en="[Technologies]"
+              >[Technologie]</p>
+            </li>
+
+            <li class="project">
+              <div class="project-top">
+                <span class="meta accent" aria-hidden="true">02</span>
+                <h3
+                  data-pl="[Nazwa projektu]"
+                  data-en="[Project title]"
+                >[Nazwa projektu]</h3>
+                <span class="project-year meta" data-pl="[Rok]" data-en="[Year]">[Rok]</span>
+              </div>
+
+              <p
+                class="project-description"
+                data-pl="[Jedno zdanie: jaki problem rozwiązałem i w jaki sposób.]"
+                data-en="[One sentence: the problem I solved and how.]"
+              >[Jedno zdanie: jaki problem rozwiązałem i w jaki sposób.]</p>
+
+              <p
+                class="project-stack meta"
+                data-pl="[Technologie]"
+                data-en="[Technologies]"
+              >[Technologie]</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section grid" id="about" aria-labelledby="about-title">
+        <h2 class="section-label" id="about-title">
+          <span class="accent">02</span>
+          <span data-pl="O mnie" data-en="About">O mnie</span>
+        </h2>
+
+        <div class="section-content">
+          <p
+            class="about-copy"
+            data-pl="Studiuję elektronikę i telekomunikację na AGH w Krakowie. Programuję głównie w C++. Na tej stronie zbieram swoje projekty ze studiów."
+            data-en="I study Electronics and Telecommunications at AGH University of Science and Technology in Kraków. I mainly program in C++. This is where I collect my university projects."
+          >Studiuję elektronikę i telekomunikację na AGH w Krakowie. Programuję głównie w C++. Na tej stronie zbieram swoje projekty ze studiów.</p>
+
+          <!-- Uzupełnij konkretny temat, którego faktycznie teraz się uczysz. -->
+          <p class="learning meta">
+            <span class="accent" data-pl="Teraz uczę się:" data-en="Currently learning:">Teraz uczę się:</span>
+            <span data-pl="[temat do uzupełnienia]" data-en="[add a topic]">[temat do uzupełnienia]</span>
+          </p>
+        </div>
+      </section>
+
+      <section class="section grid" id="contact" aria-labelledby="contact-title">
+        <h2 class="section-label" id="contact-title">
+          <span class="accent">03</span>
+          <span data-pl="Kontakt" data-en="Contact">Kontakt</span>
+        </h2>
+
+        <div class="section-content">
+          <p
+            class="contact-heading"
+            data-pl="Napisz do mnie."
+            data-en="Get in touch."
+          >Napisz do mnie.</p>
+
+          <!--
+            Zastąp pola poniżej prawdziwymi linkami, np.:
+            <a href="mailto:twoj@email.pl">twoj@email.pl</a>
+            <a href="https://github.com/TWOJ_LOGIN">github.com/TWOJ_LOGIN ↗</a>
+            <a href="https://www.linkedin.com/in/TWOJ_LOGIN/">LinkedIn ↗</a>
+
+            Dopóki nie dodasz adresów, pola nie udają działających linków.
+          -->
+          <dl class="contact-list meta">
+            <div class="contact-row">
+              <dt>Email</dt>
+              <dd data-pl="[Twój adres email]" data-en="[Your email address]">[Twój adres email]</dd>
+            </div>
+
+            <div class="contact-row">
+              <dt>GitHub</dt>
+              <dd data-pl="[Twój profil]" data-en="[Your profile]">[Twój profil]</dd>
+            </div>
+
+            <div class="contact-row">
+              <dt>LinkedIn</dt>
+              <dd data-pl="[Twój profil]" data-en="[Your profile]">[Twój profil]</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer meta">
+      <span>Juliusz / Kraków</span>
+      <span>
+        <span data-pl="Czas lokalny" data-en="Local time">Czas lokalny</span>
+        <time id="local-time" hidden></time>
+        <span id="timezone-fallback">/ Europe/Warsaw</span>
+      </span>
+    </footer>
+  </div>
+
+  <script>
+    /*
+      JavaScript ma tylko dwa zadania:
+      - przełączanie PL / EN,
+      - wyświetlanie czasu w Krakowie.
+      Nawigacja i cała treść działają również bez niego.
+    */
+    const languageButton = document.querySelector("#language-toggle");
+    const translatedElements = document.querySelectorAll("[data-pl][data-en]");
+    const clock = document.querySelector("#local-time");
+    const timezoneFallback = document.querySelector("#timezone-fallback");
+
+    let language = "pl";
+
+    function updateClock() {
+      const now = new Date();
+
+      clock.dateTime = now.toISOString();
+      clock.textContent = " / " + new Intl.DateTimeFormat(
+        language === "pl" ? "pl-PL" : "en-GB",
+        {
+          timeZone: "Europe/Warsaw",
+          hour: "2-digit",
+          minute: "2-digit",
+          hourCycle: "h23"
+        }
+      ).format(now);
+
+      clock.hidden = false;
+      timezoneFallback.hidden = true;
+    }
+
+    function setLanguage(nextLanguage) {
+      language = nextLanguage;
+      document.documentElement.lang = language;
+
+      translatedElements.forEach((element) => {
+        element.textContent = element.dataset[language];
+      });
+
+      languageButton.textContent = language === "pl" ? "EN" : "PL";
+      languageButton.setAttribute(
+        "aria-label",
+        language === "pl" ? "Switch to English" : "Przełącz na polski"
+      );
+
+      updateClock();
+    }
+
+    languageButton.hidden = false;
+    languageButton.addEventListener("click", () => {
+      setLanguage(language === "pl" ? "en" : "pl");
+    });
+
+    updateClock();
+    window.setInterval(updateClock, 60_000);
+  </script>
+</body>
+</html>
